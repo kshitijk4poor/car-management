@@ -14,6 +14,8 @@ import json
 import uuid
 from fastapi.staticfiles import StaticFiles
 import aiofiles
+import logging
+from fastapi import Request
 
 load_dotenv()
 
@@ -202,3 +204,12 @@ async def delete_car(car_id: str, current_user: User = Depends(get_current_user)
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Car not found")
     return {"message": "Car deleted successfully"}
+
+logging.basicConfig(level=logging.INFO)
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logging.info(f"Incoming request: {request.method} {request.url}")
+    response = await call_next(request)
+    logging.info(f"Response status: {response.status_code}")
+    return response
