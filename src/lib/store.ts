@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { BASE_URL } from './api';
 
 interface AuthState {
@@ -18,7 +18,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   setToken: (token) => {
     localStorage.setItem('token', token);
-    const decoded = jwtDecode<{ sub: string; email: string; name: string }>(token);
+    const decoded = jwtDecode(token) as { sub: string; email: string; name: string };
     set({ token, user: { id: decoded.sub, email: decoded.email, name: decoded.name } });
   },
   logout: () => {
