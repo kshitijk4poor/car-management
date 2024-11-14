@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000';
+export const BASE_URL = 'https://fastapi-example-vste.onrender.com';
 
 const api = axios.create({
   baseURL: `${BASE_URL}/api`,
