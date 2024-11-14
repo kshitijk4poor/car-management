@@ -44,7 +44,7 @@ export default function CarList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cars?.map((car) => (
+          {cars?.map((car: any) => (
             <Link
               key={car.id}
               to={`/cars/${car.id}`}
@@ -61,7 +61,7 @@ export default function CarList() {
                 <h2 className="text-xl font-semibold mb-2">{car.title}</h2>
                 <p className="text-gray-600 line-clamp-2">{car.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {car.tags.map((tag) => (
+                  {car.tags.map((tag: any) => (
                     <span
                       key={tag}
                       className="px-2 py-1 bg-gray-100 text-gray-600 text-sm rounded-full"

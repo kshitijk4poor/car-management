@@ -14,6 +14,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear auth state
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const login = async (email: string, password: string) => {
   const formData = new FormData();
   formData.append('username', email);
@@ -66,5 +78,5 @@ export const deleteCar = async (id: string) => {
 
 export const getImageUrl = (path: string) => {
   if (path.startsWith('http')) return path;
-  return `${BASE_URL}${path}`;
+  return `${BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
 };

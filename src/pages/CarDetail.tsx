@@ -36,6 +36,9 @@ export default function CarDetail() {
     }
   };
 
+  const imageUrl = getImageUrl(car.images[currentImageIndex]);
+  console.log('Image URL:', imageUrl); // For debugging
+
   return (
     <div>
       <Link to="/" className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6">
@@ -46,7 +49,7 @@ export default function CarDetail() {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="relative aspect-w-16 aspect-h-9 rounded-t-lg overflow-hidden">
           <img
-            src={getImageUrl(car.images[currentImageIndex]) || 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500'}
+            src={imageUrl || 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500'}
             alt={car.title}
             className="object-cover w-full h-full"
           />
@@ -55,9 +58,7 @@ export default function CarDetail() {
               {car.images.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full ${
-                    index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                  }`}
+                  className={`w-2 h-2 rounded-full ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'}`}
                   onClick={() => setCurrentImageIndex(index)}
                 />
               ))}
@@ -89,7 +90,7 @@ export default function CarDetail() {
           <p className="text-gray-600 mb-6">{car.description}</p>
 
           <div className="flex flex-wrap gap-2">
-            {car.tags.map((tag) => (
+            {car.tags.map((tag: any) => (
               <span
                 key={tag}
                 className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full"
