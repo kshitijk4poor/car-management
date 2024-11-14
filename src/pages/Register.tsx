@@ -42,6 +42,7 @@ export default function Register() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Input
           label="Name"
+          placeholder="Enter your name"
           {...register('name', {
             required: 'Name is required',
           })}
@@ -50,6 +51,7 @@ export default function Register() {
         <Input
           label="Email"
           type="email"
+          placeholder="Enter your email"
           {...register('email', {
             required: 'Email is required',
             pattern: {
@@ -62,6 +64,7 @@ export default function Register() {
         <Input
           label="Password"
           type="password"
+          placeholder="Enter your password"
           {...register('password', {
             required: 'Password is required',
             minLength: {
@@ -74,6 +77,7 @@ export default function Register() {
         <Input
           label="Confirm Password"
           type="password"
+          placeholder="Confirm your password"
           {...register('confirmPassword', {
             required: 'Please confirm your password',
             validate: (value) =>
