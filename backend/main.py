@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, status, UploadFile, File
+from fastapi import FastAPI, HTTPException, Depends, status, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
@@ -10,6 +10,10 @@ import motor.motor_asyncio
 from bson import ObjectId
 import os
 from dotenv import load_dotenv
+import json
+import uuid
+from fastapi.staticfiles import StaticFiles
+import aiofiles
 
 load_dotenv()
 
@@ -22,6 +26,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # MongoDB connection
@@ -105,11 +110,57 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Car endpoints
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)  # Create uploads directory if it doesn't exist
+
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
 @app.post("/api/cars", response_model=Car)
-async def create_car(car: CarCreate, current_user: User = Depends(get_current_user)):
-    car_dict = car.dict()
-    car_dict["user_id"] = current_user.id
-    car_dict["created_at"] = datetime.utcnow()
+async def create_car(
+    title: str = Form(...),
+    description: str = Form(...),
+    tags: str = Form(...),
+    urlImages: str = Form(...),
+    imageFiles: List[UploadFile] = File([]),
+    current_user: User = Depends(get_current_user)
+):
+    url_images = json.loads(urlImages)
+    total_images = len(url_images) + len(imageFiles)
+    
+    if total_images > 10:
+        raise HTTPException(
+            status_code=400,
+            detail="Total number of images cannot exceed 10"
+        )
+    
+    uploaded_images = []
+    if imageFiles:
+        for file in imageFiles:
+            # Generate unique filename
+            ext = file.filename.split('.')[-1]
+            filename = f"{uuid.uuid4()}.{ext}"
+            file_path = os.path.join(UPLOAD_DIR, filename)
+            
+            # Save file
+            async with aiofiles.open(file_path, 'wb') as buffer:
+                content = await file.read()
+                await buffer.write(content)
+            
+            # Store the URL path
+            uploaded_images.append(f"/uploads/{filename}")
+    
+    # Combine URLs
+    all_images = url_images + uploaded_images
+    
+    car_dict = {
+        "title": title,
+        "description": description,
+        "tags": json.loads(tags),
+        "images": all_images,
+        "user_id": current_user.id,
+        "created_at": datetime.utcnow()
+    }
+    
     result = await db.cars.insert_one(car_dict)
     created_car = await db.cars.find_one({"_id": result.inserted_id})
     return {**created_car, "id": str(created_car["_id"])}

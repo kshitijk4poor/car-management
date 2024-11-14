@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const BASE_URL = 'http://localhost:8000';
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: `${BASE_URL}/api`,
 });
 
 api.interceptors.request.use((config) => {
@@ -25,13 +27,12 @@ export const register = async (email: string, password: string, name: string) =>
   return data;
 };
 
-export const createCar = async (carData: {
-  title: string;
-  description: string;
-  tags: string[];
-  images: string[];
-}) => {
-  const { data } = await api.post('/cars', carData);
+export const createCar = async (formData: FormData) => {
+  const { data } = await api.post('/cars', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return data;
 };
 
@@ -61,4 +62,9 @@ export const updateCar = async (
 export const deleteCar = async (id: string) => {
   const { data } = await api.delete(`/cars/${id}`);
   return data;
+};
+
+export const getImageUrl = (path: string) => {
+  if (path.startsWith('http')) return path;
+  return `${BASE_URL}${path}`;
 };

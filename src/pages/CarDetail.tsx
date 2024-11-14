@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { Edit, Trash2, ChevronLeft } from 'lucide-react';
-import { getCar, deleteCar } from '../lib/api';
+import { getCar, deleteCar, getImageUrl } from '../lib/api';
 import Button from '../components/Button';
 
 export default function CarDetail() {
@@ -46,7 +46,7 @@ export default function CarDetail() {
       <div className="bg-white rounded-lg shadow-sm">
         <div className="relative aspect-w-16 aspect-h-9 rounded-t-lg overflow-hidden">
           <img
-            src={car.images[currentImageIndex] || 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500'}
+            src={getImageUrl(car.images[currentImageIndex]) || 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500'}
             alt={car.title}
             className="object-cover w-full h-full"
           />
