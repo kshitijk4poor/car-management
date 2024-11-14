@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = 'https://fastapi-example-vste.onrender.com';
+export const BASE_URL = 'https://car-management-api-cw20.onrender.com';
 
 const api = axios.create({
   baseURL: `${BASE_URL}/api`,
