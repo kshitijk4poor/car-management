@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes } from 'react';
 import { cn } from '../lib/utils';
+import { motion } from 'framer-motion';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger';
@@ -20,14 +21,15 @@ export default function Button({
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
   };
-
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       className={cn(baseStyles, variants[variant], className)}
       disabled={isLoading || disabled}
       {...props}
     >
       {isLoading ? 'Loading...' : children}
-    </button>
+    </motion.button>
   );
 }
