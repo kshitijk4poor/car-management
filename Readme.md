@@ -30,6 +30,7 @@ A modern web application for managing your car collection with rich features and
 - JWT Authentication
 - Cloudinary
 - Motor (Async MongoDB driver)
+- [Backend Repository](https://github.com/kshitijk4poor/car-management-api.git)
 
 ## 🚀 Getting Started
 
@@ -42,13 +43,20 @@ A modern web application for managing your car collection with rich features and
 
 1. Clone the repo:
 ```
-git clone https://github.com/yourusername/car-management-app.git
+git clone https://github.com/kshitijk4poor/car-management-app.git
 cd car-management-app
 ```
 
 2. Install frontend dependencies:
 ```
 npm install
+```
+
+3. Clone and set up the backend:
+```
+git clone https://github.com/kshitijk4poor/car-management-api.git
+cd car-management-api
+pip install -r requirements.txt
 ```
 
 ## 🔒 Authentication
