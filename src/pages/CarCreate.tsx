@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { createCar } from '../lib/api';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { isValidUrl } from '../lib/utils';
 
 interface CarForm {
   title: string;
@@ -99,10 +100,20 @@ export default function CarCreate() {
           placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
           {...register('images', {
             validate: (value) => {
-              const urlCount = value ? value.split(',').filter(url => url.trim()).length : 0;
+              if (!value) return true;
+              const urls = value.split(',').map(url => url.trim()).filter(Boolean);
+              const urlCount = urls.length;
               setUrlCount(urlCount);
               const totalImages = urlCount + (selectedFiles?.length || 0);
-              return totalImages <= 10 || 'Total number of images cannot exceed 10';
+              
+              if (totalImages > 10) return 'Total number of images cannot exceed 10';
+              
+              const invalidUrls = urls.filter(url => !isValidUrl(url));
+              if (invalidUrls.length > 0) {
+                return 'Invalid image URL format. URLs must end with .jpg, .jpeg, .png, .webp, .avif, .gif, or .svg';
+              }
+              
+              return true;
             }
           })}
           error={errors.images?.message}

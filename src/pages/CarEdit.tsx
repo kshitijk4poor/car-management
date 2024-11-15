@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { getCar, updateCar } from '../lib/api';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { isValidUrl } from '../lib/utils';
 
 interface CarForm {
   title: string;
@@ -106,6 +107,17 @@ export default function CarEdit() {
           label="Image URLs (comma-separated)"
           {...register('images', {
             required: 'At least one image URL is required',
+            validate: (value) => {
+              const urls = value.split(',').map(url => url.trim()).filter(Boolean);
+              if (urls.length === 0) return 'At least one image URL is required';
+              
+              const invalidUrls = urls.filter(url => !isValidUrl(url));
+              if (invalidUrls.length > 0) {
+                return 'Invalid image URL format. URLs must end with .jpg, .jpeg, .png, .webp, .avif, .gif, or .svg';
+              }
+              
+              return true;
+            }
           })}
           error={errors.images?.message}
         />

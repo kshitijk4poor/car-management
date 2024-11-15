@@ -5,6 +5,7 @@ import { Plus, Search } from 'lucide-react';
 import { getCars } from '../lib/api';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import ImageCarousel from '../components/ImageCarousel';
 
 export default function CarList() {
   const [search, setSearch] = useState('');
@@ -50,13 +51,7 @@ export default function CarList() {
               to={`/cars/${car.id}`}
               className="block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="aspect-w-16 aspect-h-9 rounded-t-lg overflow-hidden">
-                <img
-                  src={car.images[0] || 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500'}
-                  alt={car.title}
-                  className="object-cover w-full h-full"
-                />
-              </div>
+              <ImageCarousel images={car.images} title={car.title} />
               <div className="p-4">
                 <h2 className="text-xl font-semibold mb-2">{car.title}</h2>
                 <p className="text-gray-600 line-clamp-2">{car.description}</p>
