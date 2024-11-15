@@ -39,6 +39,15 @@ export const register = async (email: string, password: string, name: string) =>
   return data;
 };
 
+export const logout = async () => {
+  try {
+    await api.post('/users/logout');
+  } catch (error) {
+    // Ignore any errors during logout
+    console.error('Logout error:', error);
+  }
+};
+
 export const createCar = async (formData: FormData) => {
   const { data } = await api.post('/cars', formData, {
     headers: {

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { jwtDecode } from 'jwt-decode';
-import { BASE_URL } from './api';
+import { BASE_URL, logout } from './api';
 
 interface AuthState {
   token: string | null;
@@ -35,9 +35,11 @@ export const useAuthStore = create<AuthState>((set) => {
       set({ token, user: { id: decoded.sub, email: decoded.email, name: decoded.name } });
     },
     logout: () => {
-      localStorage.removeItem('token');
-      set({ token: null, user: null });
-      window.location.href = '/login';
+      logout().finally(() => {
+        localStorage.removeItem('token');
+        set({ token: null, user: null });
+        window.location.href = '/login';
+      });
     },
   };
 });
