@@ -13,20 +13,34 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem('token'),
-  user: null,
-  setToken: (token) => {
-    localStorage.setItem('token', token);
-    const decoded = jwtDecode(token) as { sub: string; email: string; name: string };
-    set({ token, user: { id: decoded.sub, email: decoded.email, name: decoded.name } });
-  },
-  logout: () => {
-    localStorage.removeItem('token');
-    set({ token: null, user: null });
-    window.location.href = '/login';
-  },
-}));
+export const useAuthStore = create<AuthState>((set) => {
+  const token = localStorage.getItem('token');
+  let user = null;
+  
+  if (token) {
+    try {
+      const decoded = jwtDecode(token) as { sub: string; email: string; name: string };
+      user = { id: decoded.sub, email: decoded.email, name: decoded.name };
+    } catch (e) {
+      localStorage.removeItem('token');
+    }
+  }
+
+  return {
+    token,
+    user,
+    setToken: (token) => {
+      localStorage.setItem('token', token);
+      const decoded = jwtDecode(token) as { sub: string; email: string; name: string };
+      set({ token, user: { id: decoded.sub, email: decoded.email, name: decoded.name } });
+    },
+    logout: () => {
+      localStorage.removeItem('token');
+      set({ token: null, user: null });
+      window.location.href = '/login';
+    },
+  };
+});
 
 export const getImageUrl = (path: string) => {
   if (path.startsWith('http')) return path;

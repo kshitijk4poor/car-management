@@ -43,6 +43,7 @@ export default function Login() {
         <Input
           label="Email"
           type="email"
+          placeholder="email"
           {...register('email', {
             required: 'Email is required',
             pattern: {
@@ -54,6 +55,7 @@ export default function Login() {
         />
         <Input
           label="Password"
+          placeholder="password"
           type="password"
           {...register('password', {
             required: 'Password is required',
